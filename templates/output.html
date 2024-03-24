@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictions</title>
+    <style>
+        .ball {
+            width: 50px; /* Adjust size as needed */
+            height: 50px; /* Adjust size as needed */
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px; /* Adjust spacing between balls */
+            opacity: 0; /* Hide initially */
+            transition: opacity 0.5s ease; /* Smooth transition */
+        }
+
+        .light-blue {
+            background-color: lightblue; /* Adjust color as needed */
+        }
+
+        .yellow {
+            background-color: yellow; /* Adjust color as needed */
+        }
+
+        .orange {
+            background-color: orange; /* Adjust color as needed */
+        }
+
+        .light-red {
+            background-color: lightcoral; /* Adjust color as needed */
+        }
+
+        .play-machine {
+            display: block;
+            margin: 20px auto; /* Adjust margin as needed */
+        }
+    </style>
+</head>
+<body>
+    <!-- Display the GIF -->
+    <img class="play-machine" src="{{ url_for('static', filename='play_machine.gif') }}" alt="Play Machine GIF">
+
+    <!-- Background music -->
+    <audio autoplay controls preload="auto" loop>
+        <source src="{{ url_for('static', filename='backgroundAudio.wav') }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h1>Next Outcome Predictions</h1>
+    <ul>
+        {% for category, numbers in predictions.items() %}
+        <li>{{ category }}:
+            <ul>
+                {% for number in numbers %}
+                <li>
+                    {% for digit in number %}
+                    <div class="ball {% if loop.index == 1 %}light-blue{% elif loop.index == 2 %}yellow{% elif loop.index == 3 %}orange{% elif loop.index == 4 %}light-red{% endif %}">{{ digit }}</div>
+                    {% endfor %}
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        const balls = document.querySelectorAll('.ball');
+        let index = 0;
+
+        function showNextBall() {
+            if (index < balls.length) {
+                balls[index].style.opacity = '1'; // Show ball
+                index++;
+                setTimeout(showNextBall, 1000); // 1-second interval
+            }
+        }
+
+        setTimeout(showNextBall, 1000); // Start after 1 second
+    </script>
+</body>
+</html>
